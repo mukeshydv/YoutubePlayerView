@@ -17,15 +17,15 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         let playerVars: [String: Any] = [
-            "controls": 0,
+            "controls": 1,
             "modestbranding": 1,
-            "playsinline": 0,
+            "playsinline": 1,
             "rel": 0,
             "showinfo": 0,
-            "autoplay": 0
+            "autoplay": 1
         ]
         
-        playerView.load("", with: playerVars)
+        playerView.load("GC5V67k0TAA", with: playerVars)
     }
 }
 
