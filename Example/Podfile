@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'YoutubePlayerView_Example' do
+  pod 'YoutubePlayerView', :path => '../'
+
+  target 'YoutubePlayerView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
