@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/mukeshydv/YoutubePlayerView.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '9.0'
-  s.swift_version = '4.2'
+  s.swift_version = '4.2.1'
 
   s.source_files = 'YoutubePlayerView/Classes/**/*'
 end
