@@ -25,7 +25,7 @@ class ViewController: UIViewController {
             "autoplay": 1
         ]
         
-        playerView.load("GC5V67k0TAA", with: playerVars)
+        playerView.loadWithVideoId("GC5V67k0TAA", with: playerVars)
     }
 }
 
