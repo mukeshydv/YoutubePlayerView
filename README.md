@@ -22,7 +22,7 @@ pod 'YoutubePlayerView'
 
 ## Author
 
-mukeshydv, mails4ymukesh@gmail.com
+Mukesh Yadav, mails4ymukesh@gmail.com
 
 ## License
 

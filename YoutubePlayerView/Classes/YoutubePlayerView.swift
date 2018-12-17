@@ -2,15 +2,37 @@
 //  YoutubePlayerView.swift
 //  YoutubePlayerView
 //
-//  Created by Mukesh on 17/12/18.
-//  Copyright © 2018 BooEat. All rights reserved.
+//  Copyright (c) 2018 Mukesh Yadav <mails4ymukesh@gmail.com>
 //
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
 
 import UIKit
 import WebKit
 
-public class YoutubePlayerView: UIView {
+public protocol YoutubePlayerViewDelegate: class {
+    
+}
+
+open class YoutubePlayerView: UIView {
     private var webView: WKWebView!
+    
+    weak var delegate: YoutubePlayerViewDelegate?
     
     private var configuration: WKWebViewConfiguration {
         let webConfiguration = WKWebViewConfiguration()
@@ -18,12 +40,12 @@ public class YoutubePlayerView: UIView {
         return webConfiguration
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         initializeView()
     }
     
-    required init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         super.init(coder: coder)
         initializeView()
     }
@@ -42,6 +64,12 @@ public class YoutubePlayerView: UIView {
         ])
     }
     
+    private func createUrlString(_ videoId: String, from args: [String: Any]?) -> String {
+        let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
+        
+        return "https://www.youtube.com/embed/"+videoId+"?\(params)enablejsapi=1"
+    }
+    
     public func load(_ videoId: String, with parArgs: [String: Any]? = nil) {
         
         let link = createUrlString(videoId, from: parArgs)
@@ -50,12 +78,6 @@ public class YoutubePlayerView: UIView {
             let htmlString = String(format: YoutubePlayerUtils.htmlString, link)
             self.webView.loadHTMLString(htmlString, baseURL: nil)
         })
-    }
-    
-    private func createUrlString(_ videoId: String, from args: [String: Any]?) -> String {
-        let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
-        
-        return "https://www.youtube.com/embed/"+videoId+"?\(params)enablejsapi=1"
     }
     
     public func play() {
