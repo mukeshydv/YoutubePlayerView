@@ -1,0 +1,22 @@
+{
+  "name": "YoutubePlayerView",
+  "version": "0.1.0",
+  "summary": "A short description of YoutubePlayerView.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/mukeshydv/YoutubePlayerView",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "mukeshydv": "mails4ymukesh@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/mukeshydv/YoutubePlayerView.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "YoutubePlayerView/Classes/**/*"
+}

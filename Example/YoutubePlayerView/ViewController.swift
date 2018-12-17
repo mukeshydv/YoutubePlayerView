@@ -7,18 +7,25 @@
 //
 
 import UIKit
+import YoutubePlayerView
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var playerView: YoutubePlayerView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let playerVars: [String: Any] = [
+            "controls": 0,
+            "modestbranding": 1,
+            "playsinline": 0,
+            "rel": 0,
+            "showinfo": 0,
+            "autoplay": 0
+        ]
+        
+        playerView.load("", with: playerVars)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 }
 
