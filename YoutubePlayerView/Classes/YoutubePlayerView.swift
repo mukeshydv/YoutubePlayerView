@@ -86,6 +86,11 @@ open class YoutubePlayerView: UIView {
     private var configuration: WKWebViewConfiguration {
         let webConfiguration = WKWebViewConfiguration()
         webConfiguration.allowsInlineMediaPlayback = true
+        if #available(iOS 10.0, *) {
+            webConfiguration.mediaTypesRequiringUserActionForPlayback = []
+        } else {
+            webConfiguration.requiresUserActionForMediaPlayback = false
+        }
         return webConfiguration
     }
     
@@ -113,22 +118,33 @@ open class YoutubePlayerView: UIView {
         ])
     }
     
-    private func createUrlString(_ videoId: String, from args: [String: Any]?) -> String {
+    private func createVideoUrlString(_ videoId: String, from args: [String: Any]?) -> String {
         let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
         
         return "https://www.youtube.com/embed/"+videoId+"?\(params)enablejsapi=1"
     }
     
-    public func loadWithVideoId(_ videoId: String, with parArgs: [String: Any]? = nil) {
-        let link = createUrlString(videoId, from: parArgs)
+    private func createPlaylistUrlString(_ playlistId: String, from args: [String: Any]?) -> String {
+        let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
         
+        return "https://www.youtube.com/embed?listType=playlist&list=\(playlistId)&\(params)enablejsapi=1"
+    }
+    
+    private func loadPlayer(with url: String) {
         DispatchQueue.main.async(execute: { () -> Void in
-            let htmlString = String(format: YoutubePlayerUtils.htmlString, link)
+            let htmlString = String(format: YoutubePlayerUtils.htmlString, url)
             self.webView.loadHTMLString(htmlString, baseURL: nil)
         })
     }
     
+    public func loadWithVideoId(_ videoId: String, with parArgs: [String: Any]? = nil) {
+        let link = createVideoUrlString(videoId, from: parArgs)
+        loadPlayer(with: link)
+    }
+    
     public func loadWithPlaylistId(_ playlistId: String, with parArgs: [String: Any]? = nil) {
+        let link = createPlaylistUrlString(playlistId, from: parArgs)
+        loadPlayer(with: link)
     }
 }
 
@@ -152,6 +168,7 @@ extension YoutubePlayerView {
     }
 }
 
+// MARK:- Cueing methods
 extension YoutubePlayerView {
     public func loadVideoById(_ videoId: String, startSeconds: Float, suggestedQuality quality: YoutubePlaybackQuality) {
         let command = "player.loadVideoById('\(videoId)', \(startSeconds), '\(quality.rawValue)');"
@@ -196,6 +213,7 @@ extension YoutubePlayerView {
     }
 }
 
+// MARK:- Cueing methods for lists
 extension YoutubePlayerView {
     public func cuePlaylistByPlaylistId(_ playlistId: String, index: Int=0, startSeconds: Float, suggestedQuality quality: YoutubePlaybackQuality) {
         cuePlaylist("'\(playlistId)'", index: index, startSeconds: startSeconds, suggestedQuality: quality)
@@ -224,6 +242,7 @@ extension YoutubePlayerView {
     }
 }
 
+// MARK:- Setting the playback rate
 extension YoutubePlayerView {
     func fetchPlaybackRate(_ handler: @escaping (Float?)->()) {
         webView.evaluateJavaScript("player.getPlaybackRate();") { (data, _) in
@@ -245,6 +264,62 @@ extension YoutubePlayerView {
             }
             handler(nil)
         }
+    }
+}
+
+// MARK:- Setting playback behavior for playlists
+extension YoutubePlayerView {
+    public func setLoop(_ isLoop: Bool) {
+        let command = "player.setLoop(\(isLoop));"
+        webView.evaluateJavaScript(command, completionHandler: nil)
+    }
+    
+    public func setShuffle(_ isShuffle: Bool) {
+        let command = "player.setShuffle(\(isShuffle));"
+        webView.evaluateJavaScript(command, completionHandler: nil)
+    }
+}
+
+// MARK:- Playback status
+extension YoutubePlayerView {
+    public func fetchVideoLoadedFraction(_ completionHandler: @escaping (Float?) -> ()) {
+        webView.evaluateJavaScript("player.getVideoLoadedFraction();") { (data, _) in
+            completionHandler(data as? Float)
+        }
+    }
+    
+    public func fetchPlayerState(_ completionHandler: @escaping (YoutubePlayerState) -> ()) {
+        webView.evaluateJavaScript("player.getPlayerState();") { (data, _) in
+            if let stringValue = data as? String, let state = YoutubePlayerState(rawValue: stringValue) {
+                completionHandler(state)
+            } else {
+                completionHandler(.unknown)
+            }
+        }
+    }
+    
+    public func fetchCurrentTime(_ completionHandler: @escaping (Float?) -> ()) {
+        webView.evaluateJavaScript("player.getCurrentTime();") { (data, _) in
+            completionHandler(data as? Float)
+        }
+    }
+}
+
+// MARK:- Playback quality
+extension YoutubePlayerView {
+    public func fetchPlaybackQuality(_ completionHandler: @escaping (YoutubePlaybackQuality) -> ()) {
+        webView.evaluateJavaScript("player.getPlaybackQuality();") { (data, _) in
+            if let stringValue = data as? String, let state = YoutubePlaybackQuality(rawValue: stringValue) {
+                completionHandler(state)
+            } else {
+                completionHandler(.unknown)
+            }
+        }
+    }
+    
+    public func setPlaybackQuality(_ quality: YoutubePlaybackQuality) {
+        let command = "player.setPlaybackQuality('\(quality.rawValue)');"
+        webView.evaluateJavaScript(command, completionHandler: nil)
     }
 }
 
