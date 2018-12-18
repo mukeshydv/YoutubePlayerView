@@ -47,7 +47,7 @@ extension YoutubePlayerViewDelegate {
 
 open class YoutubePlayerView: UIView {
     private var webView: WKWebView!
-    fileprivate var loadingView: UIView?
+    fileprivate weak var loadingView: UIView?
     
     weak var delegate: YoutubePlayerViewDelegate?
     
@@ -75,15 +75,20 @@ open class YoutubePlayerView: UIView {
     private func initializeView() {
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.scrollView.isScrollEnabled = false
+        webView.scrollView.bounces = false
         webView.navigationDelegate = self
-        addSubview(webView)
-        webView.translatesAutoresizingMaskIntoConstraints = false
+        add(subview: webView)
+    }
+    
+    private func add(subview: UIView) {
+        addSubview(subview)
+        subview.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            webView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            webView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            webView.topAnchor.constraint(equalTo: topAnchor),
-            webView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            subview.leadingAnchor.constraint(equalTo: leadingAnchor),
+            subview.trailingAnchor.constraint(equalTo: trailingAnchor),
+            subview.topAnchor.constraint(equalTo: topAnchor),
+            subview.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
     
@@ -100,9 +105,26 @@ open class YoutubePlayerView: UIView {
     }
     
     private func loadPlayer(with url: String) {
-        DispatchQueue.main.async(execute: { () -> Void in
+        
+        func load(with url: String) {
+            if let color = delegate?.playerViewPreferredBackgroundColor(self) {
+                webView.backgroundColor = color
+                if color == UIColor.clear {
+                    webView.isOpaque = false
+                }
+            }
+            
             let htmlString = String(format: YoutubePlayerUtils.htmlString, url)
-            self.webView.loadHTMLString(htmlString, baseURL: nil)
+            webView.loadHTMLString(htmlString, baseURL: nil)
+            
+            if let loadingView = delegate?.playerViewPreferredInitialLoadingView(self) {
+                add(subview: loadingView)
+                self.loadingView = loadingView
+            }
+        }
+        
+        DispatchQueue.main.async(execute: { () -> Void in
+            load(with: url)
         })
     }
     
