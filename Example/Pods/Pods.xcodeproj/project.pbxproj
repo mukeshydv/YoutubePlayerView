@@ -13,7 +13,7 @@
 		44367B3BD35C0CCB7BC4B99B2120D631 /* YoutubePlayerView-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8878C590B56C781B3BD05607C7EF22E1 /* YoutubePlayerView-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4E883BC53EB0DB47E727127376C6BFF1 /* Pods-YoutubePlayerView_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0F8907DDF2B4D32DCA9D805E40E5D815 /* Pods-YoutubePlayerView_Example-dummy.m */; };
 		8BF2EBFA21C7D5F8005F5625 /* YoutubePlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF2EBF821C7D5F8005F5625 /* YoutubePlayerView.swift */; };
-		8BF2EBFB21C7D5F8005F5625 /* YoutubePlayerUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF2EBF921C7D5F8005F5625 /* YoutubePlayerUtils.swift */; };
+		8BF2EBFB21C7D5F8005F5625 /* YoutubePlayerExtras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF2EBF921C7D5F8005F5625 /* YoutubePlayerExtras.swift */; };
 		A475383DC5543D177DE15CB022772298 /* Pods-YoutubePlayerView_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = AA9C005AD2C2F2CE93E72579DF230216 /* Pods-YoutubePlayerView_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DEFE16B5E6DBD20BC4424EB4C61F7722 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
 		EDC46E320713F0B381A24EA6D36B3926 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
@@ -58,7 +58,7 @@
 		842CF3205FCB804A722CC618F273D2E3 /* Pods-YoutubePlayerView_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-YoutubePlayerView_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		8878C590B56C781B3BD05607C7EF22E1 /* YoutubePlayerView-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "YoutubePlayerView-umbrella.h"; sourceTree = "<group>"; };
 		8BF2EBF821C7D5F8005F5625 /* YoutubePlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YoutubePlayerView.swift; path = YoutubePlayerView/Classes/YoutubePlayerView.swift; sourceTree = "<group>"; };
-		8BF2EBF921C7D5F8005F5625 /* YoutubePlayerUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YoutubePlayerUtils.swift; path = YoutubePlayerView/Classes/YoutubePlayerUtils.swift; sourceTree = "<group>"; };
+		8BF2EBF921C7D5F8005F5625 /* YoutubePlayerExtras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YoutubePlayerExtras.swift; path = YoutubePlayerView/Classes/YoutubePlayerExtras.swift; sourceTree = "<group>"; };
 		91F371F0A7E25416CAE7987E57CDFBD9 /* Pods-YoutubePlayerView_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-YoutubePlayerView_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9BE8DB5F5329E3D4237CAFD79CB37B92 /* Pods-YoutubePlayerView_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-YoutubePlayerView_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -171,7 +171,7 @@
 		C6FDF99E48FD28CF87A6BB6289CDEC63 /* YoutubePlayerView */ = {
 			isa = PBXGroup;
 			children = (
-				8BF2EBF921C7D5F8005F5625 /* YoutubePlayerUtils.swift */,
+				8BF2EBF921C7D5F8005F5625 /* YoutubePlayerExtras.swift */,
 				8BF2EBF821C7D5F8005F5625 /* YoutubePlayerView.swift */,
 				C80A47DAB4468747FB6155057D56AA60 /* Pod */,
 				F67D04F321B268C0B14CA8D371231289 /* Support Files */,
@@ -352,7 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8BF2EBFA21C7D5F8005F5625 /* YoutubePlayerView.swift in Sources */,
-				8BF2EBFB21C7D5F8005F5625 /* YoutubePlayerUtils.swift in Sources */,
+				8BF2EBFB21C7D5F8005F5625 /* YoutubePlayerExtras.swift in Sources */,
 				41EEE262E2DB0539A640E7E959BE5124 /* YoutubePlayerView-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

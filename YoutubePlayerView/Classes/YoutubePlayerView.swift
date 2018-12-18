@@ -25,38 +25,6 @@
 import UIKit
 import WebKit
 
-public enum YoutubePlayerState: String {
-    case unstarted
-    case ended
-    case playing
-    case paused
-    case buffering
-    case queued
-    case unknown
-}
-
-public enum YoutubePlaybackQuality: String {
-    case small
-    case medium
-    case large
-    case hd720
-    case hd1080
-    case highRes
-    case auto /** Addition for YouTube Live Events. */
-    case `default`
-    case unknown /** This should never be returned. It is here for future proofing. */
-}
-
-enum YoutubePlayerError: String, Error {
-    case invalidParam
-    case HTML5Error
-    case videoNotFound // Functionally equivalent error codes 100 and
-    // 105 have been collapsed into |kYTPlayerErrorVideoNotFound|.
-    case notEmbeddable // Functionally equivalent error codes 101 and
-    // 150 have been collapsed into |kYTPlayerErrorNotEmbeddable|.
-    case unknown
-}
-
 public protocol YoutubePlayerViewDelegate: class {
     func playerViewDidBecomeReady(_ playerView: YoutubePlayerView)
     func playerView(_ playerView: YoutubePlayerView, didChangedToState state: YoutubePlayerState)
@@ -107,6 +75,7 @@ open class YoutubePlayerView: UIView {
     private func initializeView() {
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.scrollView.isScrollEnabled = false
+        webView.navigationDelegate = self
         addSubview(webView)
         webView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -244,17 +213,17 @@ extension YoutubePlayerView {
 
 // MARK:- Setting the playback rate
 extension YoutubePlayerView {
-    func fetchPlaybackRate(_ handler: @escaping (Float?)->()) {
+    public func fetchPlaybackRate(_ handler: @escaping (Float?)->()) {
         webView.evaluateJavaScript("player.getPlaybackRate();") { (data, _) in
             handler(data as? Float)
         }
     }
     
-    func setPlaybackRate(_ rate: Float) {
+    public func setPlaybackRate(_ rate: Float) {
         webView.evaluateJavaScript("player.setPlaybackRate(\(rate));", completionHandler: nil)
     }
     
-    func fetchAvailablePlaybackRates(_ handler: @escaping ([Float]?)->()) {
+    public func fetchAvailablePlaybackRates(_ handler: @escaping ([Float]?)->()) {
         webView.evaluateJavaScript("player.getPlaybackRate();") { (data, _) in
             if let stringValue = (data as? String)?.data(using: .utf8) {
                 if let rates = try? JSONSerialization.jsonObject(with: stringValue, options: []) as? [Float] {
@@ -323,9 +292,82 @@ extension YoutubePlayerView {
     }
 }
 
+// MARK:- Video information methods
+extension YoutubePlayerView {
+    public func fetchDuration(_ completionHandler: @escaping (TimeInterval?) -> ()) {
+        webView.evaluateJavaScript("player.getDuration();") { (data, _) in
+            completionHandler(data as? Double)
+        }
+    }
+    
+    public func fetchVideoUrl(_ completionHandler: @escaping (String?) -> ()) {
+        webView.evaluateJavaScript("player.getVideoUrl();") { (data, _) in
+            completionHandler(data as? String)
+        }
+    }
+    
+    public func fetchVideoEmbedCode(_ completionHandler: @escaping (String?) -> ()) {
+        webView.evaluateJavaScript("player.getVideoEmbedCode();") { (data, _) in
+            completionHandler(data as? String)
+        }
+    }
+}
+
+// MARK:- Playlist methods
+extension YoutubePlayerView {
+    public func fetchPlaylist(_ handler: @escaping ([String]?)->()) {
+        webView.evaluateJavaScript("player.getPlaylist();") { (data, _) in
+            if let stringValue = (data as? String)?.data(using: .utf8) {
+                if let rates = try? JSONSerialization.jsonObject(with: stringValue, options: []) as? [String] {
+                    handler(rates)
+                    return
+                }
+            }
+            handler(nil)
+        }
+    }
+    
+    public func fetchPlaylistIndex(_ completionHandler: @escaping (Int?) -> ()) {
+        webView.evaluateJavaScript("player.getPlaylistIndex();") { (data, _) in
+            completionHandler(data as? Int)
+        }
+    }
+}
+
+// MARK:- Playing a video in a playlist
+extension YoutubePlayerView {
+    public func nextVideo() {
+        webView.evaluateJavaScript("player.nextVideo();", completionHandler: nil)
+    }
+    
+    public func previousVideo() {
+        webView.evaluateJavaScript("player.previousVideo();", completionHandler: nil)
+    }
+    
+    public func playVideo(at index: Int) {
+        webView.evaluateJavaScript("player.playVideoAt(\(index));", completionHandler: nil)
+    }
+}
+
+extension YoutubePlayerView: WKNavigationDelegate {
+    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        if navigationAction.request.url?.scheme == "ytplayer" {
+            notifyDelegate(for: navigationAction.request.url!)
+            decisionHandler(.cancel)
+        } else {
+           decisionHandler(.allow)
+        }
+    }
+    
+    public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        loadingView?.removeFromSuperview()
+    }
+}
+
 extension YoutubePlayerView {
     fileprivate func notifyDelegate(for url: URL) {
-        guard let actionString = url.host, let action = Constants.Callback(rawValue: actionString)  else {
+        guard let actionString = url.host, let action = Callback(rawValue: actionString)  else {
             return
         }
         

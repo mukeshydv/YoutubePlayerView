@@ -36,7 +36,7 @@ enum YoutubePlayerUtils {
             var tag = document.createElement('script');
             tag.id = 'iframe-demo';
             tag.src = 'https://www.youtube.com/iframe_api';
-            tag.onerror = 'window.location.href='ytplayer://onYouTubeIframeAPIFailedToLoad'';
+            tag.onerror = "window.location.href='ytplayer://onYouTubeIframeAPIFailedToLoad'";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         
@@ -50,6 +50,17 @@ enum YoutubePlayerUtils {
                         'onError': onPlayerError
                     }
                 });
+        
+                // this will transmit playTime frequently while playng
+                function getCurrentTime() {
+                    var state = player.getPlayerState();
+                    if (state == YT.PlayerState.PLAYING) {
+                        time = player.getCurrentTime()
+                        window.location.href = 'ytplayer://onPlayTime?data=' + time;
+                    }
+                }
+        
+                window.setInterval(getCurrentTime, 500);
             }
         
             function onReady(event) {
@@ -84,53 +95,45 @@ enum YoutubePlayerUtils {
     }
 }
 
-enum Constants {
-    enum StateCode {
-        static let unstarted = "-1"
-        static let ended = "0"
-        static let playing = "1"
-        static let paused = "2"
-        static let buffering = "3"
-        static let cued = "5"
-        static let unknown = "unknown"
-    }
+
+public enum YoutubePlayerState: String {
+    case unstarted = "-1"
+    case ended = "0"
+    case playing = "1"
+    case paused = "2"
+    case buffering = "3"
+    case queued = "5"
+    case unknown
+}
+
+public enum YoutubePlaybackQuality: String {
+    case small
+    case medium
+    case large
+    case hd720
+    case hd1080
+    case highres
+    case auto /** Addition for YouTube Live Events. */
+    case `default`
+    case unknown /** This should never be returned. It is here for future proofing. */
+}
+
+public enum YoutubePlayerError: String, Error {
+    case invalidParam = "2"
+    case HTML5Error = "5"
+    case videoNotFound = "100" // Functionally equivalent error codes 100 and
+    // 105 have been collapsed into |kYTPlayerErrorVideoNotFound|.
+    case notEmbeddable = "101" // Functionally equivalent error codes 101 and
+    // 150 have been collapsed into |kYTPlayerErrorNotEmbeddable|.
+    case unknown
+}
+
+enum Callback: String {
+    case onReady = "onReady"
+    case onStateChange = "onStateChange"
+    case onPlaybackQualityChange = "onPlaybackQualityChange"
+    case onError = "onError"
+    case onPlayTime = "onPlayTime"
     
-    enum PlaybackQuality {
-        static let small = "small"
-        static let medium = "medium"
-        static let large = "large"
-        static let hd720 = "hd720"
-        static let hd1080 = "hd1080"
-        static let highRes = "highres"
-        static let auto = "auto"
-        static let `default` = "default"
-        static let unknown = "unknown"
-    }
-    
-    enum ErrorCode {
-        static let invalidparamerrorcode = "2"
-        static let Html5errorcode = "5"
-        static let videonotfounderrorcode = "100"
-        static let notembeddableerrorcode = "101"
-        static let cannotfindvideoerrorcode = "105"
-        static let sameasnotembeddableerrorcode = "150"
-    }
-    
-    enum Callback: String {
-        case onReady = "onReady"
-        case onStateChange = "onStateChange"
-        case onPlaybackQualityChange = "onPlaybackQualityChange"
-        case onError = "onError"
-        case onPlayTime = "onPlayTime"
-        
-        case onYouTubeIframeAPIFailedToLoad = "onYouTubeIframeAPIFailedToLoad"
-    }
-    
-    enum RegexPattern {
-        static let embedUrl = "^http(s)://(www.)youtube.com/embed/(.*)$"
-        static let adUrl = "^http(s)://pubads.g.doubleclick.net/pagead/conversion/"
-        static let oAuth = "^http(s)://accounts.google.com/o/oauth2/(.*)$"
-        static let staticProxy = "^https://content.googleapis.com/static/proxy.html(.*)$"
-        static let syndication = "^https://tpc.googlesyndication.com/sodar/(.*).html$"
-    }
+    case onYouTubeIframeAPIFailedToLoad = "onYouTubeIframeAPIFailedToLoad"
 }
