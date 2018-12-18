@@ -41,6 +41,8 @@ enum YoutubePlayerUtils {
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         
             var player;
+            var error = false;
+        
             function onYouTubeIframeAPIReady() {
                 player = new YT.Player('existing-iframe-example', {
                     events: {

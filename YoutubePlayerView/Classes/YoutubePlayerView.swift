@@ -35,7 +35,7 @@ public protocol YoutubePlayerViewDelegate: class {
     func playerViewPreferredInitialLoadingView(_ playerView: YoutubePlayerView) -> UIView?
 }
 
-extension YoutubePlayerViewDelegate {
+public extension YoutubePlayerViewDelegate {
     func playerViewDidBecomeReady(_ playerView: YoutubePlayerView) { }
     func playerView(_ playerView: YoutubePlayerView, didChangedToState state: YoutubePlayerState) { }
     func playerView(_ playerView: YoutubePlayerView, didChangeToQuality quality: YoutubePlaybackQuality) { }
@@ -49,7 +49,7 @@ open class YoutubePlayerView: UIView {
     private var webView: WKWebView!
     fileprivate weak var loadingView: UIView?
     
-    weak var delegate: YoutubePlayerViewDelegate?
+    public weak var delegate: YoutubePlayerViewDelegate?
     
     private var configuration: WKWebViewConfiguration {
         let webConfiguration = WKWebViewConfiguration()

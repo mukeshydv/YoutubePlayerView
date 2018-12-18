@@ -24,8 +24,37 @@ class ViewController: UIViewController {
             "showinfo": 0,
             "autoplay": 1
         ]
-        
+        playerView.delegate = self
         playerView.loadWithVideoId("GC5V67k0TAA", with: playerVars)
+    }
+}
+
+extension ViewController: YoutubePlayerViewDelegate {
+    func playerViewDidBecomeReady(_ playerView: YoutubePlayerView) {
+        print("Ready")
+        playerView.play()
+    }
+    
+    func playerView(_ playerView: YoutubePlayerView, didChangedToState state: YoutubePlayerState) {
+        print("Changed to state: \(state)")
+    }
+    
+    func playerView(_ playerView: YoutubePlayerView, didChangeToQuality quality: YoutubePlaybackQuality) {
+        print("Changed to quality: \(quality)")
+    }
+    
+    func playerView(_ playerView: YoutubePlayerView, receivedError error: Error) {
+        print("Error: \(error)")
+    }
+    
+    func playerView(_ playerView: YoutubePlayerView, didPlayTime time: Float) {
+        print("Play time: \(time)")
+    }
+    
+    func playerViewPreferredInitialLoadingView(_ playerView: YoutubePlayerView) -> UIView? {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
     }
 }
 
