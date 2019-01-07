@@ -91,17 +91,24 @@ public extension YoutubePlayerViewDelegate {
 open class YoutubePlayerView: UIView {
     private var webView: WKWebView!
     fileprivate weak var loadingView: UIView?
+    private var autoplay = false
     
     public weak var delegate: YoutubePlayerViewDelegate?
     
     private var configuration: WKWebViewConfiguration {
+        let preferences = WKPreferences()
+        preferences.javaScriptEnabled = true
+        
         let webConfiguration = WKWebViewConfiguration()
-        webConfiguration.allowsInlineMediaPlayback = true
+        webConfiguration.preferences = preferences
+        
         if #available(iOS 10.0, *) {
             webConfiguration.mediaTypesRequiringUserActionForPlayback = []
         } else {
             webConfiguration.requiresUserActionForMediaPlayback = false
         }
+        
+        webConfiguration.allowsInlineMediaPlayback = true
         return webConfiguration
     }
     
@@ -138,11 +145,15 @@ open class YoutubePlayerView: UIView {
     private func createVideoUrlString(_ videoId: String, from args: [String: Any]?) -> String {
         let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
         
+        autoplay = (args?["autoplay"] as? Int) == 1
+        
         return "https://www.youtube.com/embed/"+videoId+"?\(params)enablejsapi=1"
     }
     
     private func createPlaylistUrlString(_ playlistId: String, from args: [String: Any]?) -> String {
         let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
+        
+        autoplay = (args?["autoplay"] as? Int) == 1
         
         return "https://www.youtube.com/embed?listType=playlist&list=\(playlistId)&\(params)enablejsapi=1"
     }
@@ -693,6 +704,11 @@ extension YoutubePlayerView {
         switch action {
         case .onReady:
             loadingView?.removeFromSuperview()
+            
+            if autoplay {
+                play()
+            }
+            
             delegate?.playerViewDidBecomeReady(self)
         case .onStateChange:
             if let data = data, let state = YoutubePlayerState(rawValue: data) {

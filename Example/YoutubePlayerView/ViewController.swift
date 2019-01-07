@@ -20,8 +20,6 @@ class ViewController: UIViewController {
             "controls": 1,
             "modestbranding": 1,
             "playsinline": 1,
-            "rel": 0,
-            "showinfo": 0,
             "autoplay": 1
         ]
         playerView.delegate = self
@@ -32,7 +30,6 @@ class ViewController: UIViewController {
 extension ViewController: YoutubePlayerViewDelegate {
     func playerViewDidBecomeReady(_ playerView: YoutubePlayerView) {
         print("Ready")
-        playerView.play()
     }
     
     func playerView(_ playerView: YoutubePlayerView, didChangedToState state: YoutubePlayerState) {
