@@ -528,7 +528,7 @@ extension YoutubePlayerView {
     ///   `https://developers.google.com/youtube/iframe_api_reference#getPlayerState`
     ///
     public func fetchPlayerState(_ completionHandler: @escaping (YoutubePlayerState) -> ()) {
-        webView.evaluateJavaScript("player.getPlayerState();") { (data, _) in
+        webView.evaluateJavaScript("player.getPlayerState().toString();") { (data, _) in
             if let stringValue = data as? String, let state = YoutubePlayerState(rawValue: stringValue) {
                 completionHandler(state)
             } else {

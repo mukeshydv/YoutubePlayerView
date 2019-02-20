@@ -30,6 +30,9 @@ class ViewController: UIViewController {
 extension ViewController: YoutubePlayerViewDelegate {
     func playerViewDidBecomeReady(_ playerView: YoutubePlayerView) {
         print("Ready")
+        playerView.fetchPlayerState { (state) in
+            print("Fetch Player State: \(state)")
+        }
     }
     
     func playerView(_ playerView: YoutubePlayerView, didChangedToState state: YoutubePlayerState) {
