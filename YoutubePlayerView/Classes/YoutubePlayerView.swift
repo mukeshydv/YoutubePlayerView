@@ -142,25 +142,43 @@ open class YoutubePlayerView: UIView {
         ])
     }
     
-    private func createVideoUrlString(_ videoId: String, from args: [String: Any]?) -> String {
-        let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
+    private func createVideoUrlString(_ videoId: String, from args: [String: Any]?) -> (String, String) {
+        let params = args?.reduce("") { prev, next in
+            var value = next.value
+            
+            if let string = (value as? String)?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+                value = string
+            }
+            
+            return prev! + "\(next.key)=\(value)&"
+        } ?? ""
         
         autoplay = (args?["autoplay"] as? Int) == 1
         
-        return "https://www.youtube.com/embed/"+videoId+"?\(params)enablejsapi=1"
+        return ("https://www.youtube.com/embed/"+videoId+"?\(params)enablejsapi=1",
+            (args?["origin"] as? String) ?? "")
     }
     
-    private func createPlaylistUrlString(_ playlistId: String, from args: [String: Any]?) -> String {
-        let params = args?.reduce("") { $0 + "\($1.key)=\($1.value)&" } ?? ""
+    private func createPlaylistUrlString(_ playlistId: String, from args: [String: Any]?) -> (String, String) {
+        let params = args?.reduce("") { prev, next in
+            var value = next.value
+            
+            if let string = value as? String {
+                value = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) as Any
+            }
+            
+            return prev! + "\(next.key)=\(value)&"
+            } ?? ""
         
         autoplay = (args?["autoplay"] as? Int) == 1
         
-        return "https://www.youtube.com/embed?listType=playlist&list=\(playlistId)&\(params)enablejsapi=1"
+        return ("https://www.youtube.com/embed?listType=playlist&list=\(playlistId)&\(params)enablejsapi=1",
+            (args?["origin"] as? String) ?? "")
     }
     
-    private func loadPlayer(with url: String) {
+    private func loadPlayer(with url: (String, String)) {
         
-        func load(with url: String) {
+        func load(with url: (String, String)) {
             if let color = delegate?.playerViewPreferredBackgroundColor(self) {
                 webView.backgroundColor = color
                 if color == UIColor.clear {
@@ -168,8 +186,8 @@ open class YoutubePlayerView: UIView {
                 }
             }
             
-            let htmlString = String(format: YoutubePlayerUtils.htmlString, url)
-            webView.loadHTMLString(htmlString, baseURL: nil)
+            let htmlString = String(format: YoutubePlayerUtils.htmlString, url.0)
+            webView.loadHTMLString(htmlString, baseURL: URL(string: url.1))
             
             if let loadingView = delegate?.playerViewPreferredInitialLoadingView(self) {
                 add(subview: loadingView)
