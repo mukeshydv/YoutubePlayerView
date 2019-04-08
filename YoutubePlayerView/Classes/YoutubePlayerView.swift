@@ -494,7 +494,7 @@ extension YoutubePlayerView {
     public func fetchAvailablePlaybackRates(_ handler: @escaping ([Float]?)->()) {
         webView.evaluateJavaScript("player.getPlaybackRate();") { (data, _) in
             if let stringValue = (data as? String)?.data(using: .utf8) {
-                if let rates = try? JSONSerialization.jsonObject(with: stringValue, options: []) as? [Float] {
+                if let rates = ((try? JSONSerialization.jsonObject(with: stringValue, options: []) as? [Float]) as [Float]??) {
                     handler(rates)
                     return
                 }
@@ -650,7 +650,7 @@ extension YoutubePlayerView {
     public func fetchPlaylist(_ handler: @escaping ([String]?)->()) {
         webView.evaluateJavaScript("player.getPlaylist();") { (data, _) in
             if let stringValue = (data as? String)?.data(using: .utf8) {
-                if let rates = try? JSONSerialization.jsonObject(with: stringValue, options: []) as? [String] {
+                if let rates = ((try? JSONSerialization.jsonObject(with: stringValue, options: []) as? [String]) as [String]??) {
                     handler(rates)
                     return
                 }
