@@ -20,11 +20,10 @@ class ViewController: UIViewController {
             "controls": 1,
             "modestbranding": 1,
             "playsinline": 1,
-            "autoplay": 1,
             "origin": "https://youtube.com"
         ]
         playerView.delegate = self
-        playerView.loadWithVideoId("5fssKTMg0IU", with: playerVars)
+        playerView.loadWithVideoId("x-MBR13sVqs", with: playerVars)
     }
 }
 
