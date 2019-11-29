@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'YoutubePlayerView'
-  s.version          = '1.1.0'
+  s.version          = '1.2.0'
   s.summary          = 'Helper library for iOS developers that want to embed YouTube videos in their iOS apps with the iframe player API.'
 
   s.description      = <<-DESC
@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '9.0'
   s.swift_version = '5.0'
 
-  s.source_files = 'YoutubePlayerView/Classes/**/*'
+  s.source_files = 'Sources/YoutubePlayerView/*.swift'
 end

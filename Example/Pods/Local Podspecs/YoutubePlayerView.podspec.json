@@ -1,22 +1,24 @@
 {
   "name": "YoutubePlayerView",
-  "version": "0.1.0",
-  "summary": "A short description of YoutubePlayerView.",
-  "description": "TODO: Add long description of the pod here.",
+  "version": "1.1.0",
+  "summary": "Helper library for iOS developers that want to embed YouTube videos in their iOS apps with the iframe player API.",
+  "description": "Helper library for iOS developers that want to play YouTube videos in their iOS apps with the iframe player API.\nThis library allows iOS developers to quickly embed YouTube videos within their applications via a custom WKWebView subclass, YoutubePlayerView.",
   "homepage": "https://github.com/mukeshydv/YoutubePlayerView",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "mukeshydv": "mails4ymukesh@gmail.com"
+    "Mukesh Yadav": "mails4ymukesh@gmail.com"
   },
   "source": {
     "git": "https://github.com/mukeshydv/YoutubePlayerView.git",
-    "tag": "0.1.0"
+    "tag": "1.1.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "9.0"
   },
-  "source_files": "YoutubePlayerView/Classes/**/*"
+  "swift_versions": "5.0",
+  "source_files": "Sources/YoutubePlayerView/**/*",
+  "swift_version": "5.0"
 }

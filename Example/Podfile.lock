@@ -1,5 +1,5 @@
 PODS:
-  - YoutubePlayerView (0.1.0)
+  - YoutubePlayerView (1.1.0)
 
 DEPENDENCIES:
   - YoutubePlayerView (from `../`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  YoutubePlayerView: dd2aee904e39df259e75464129ac31e42820841f
+  YoutubePlayerView: 0d4bedc0c6129ef89f99acd0c20d5122ddf38083
 
 PODFILE CHECKSUM: 45026ebc5216d6829b26d5421ca3a70d44b845ca
 
-COCOAPODS: 1.5.3
+COCOAPODS: 1.8.4
