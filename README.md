@@ -1,6 +1,7 @@
 # YoutubePlayerView
 
 [![CI Status](https://img.shields.io/travis/mukeshydv/YoutubePlayerView.svg?style=flat)](https://travis-ci.org/mukeshydv/YoutubePlayerView)
+![](https://github.com/mukeshydv/YoutubePlayerView/workflows/Swift/badge.svg)
 [![Version](https://img.shields.io/cocoapods/v/YoutubePlayerView.svg?style=flat)](https://cocoapods.org/pods/YoutubePlayerView)
 [![License](https://img.shields.io/cocoapods/l/YoutubePlayerView.svg?style=flat)](https://cocoapods.org/pods/YoutubePlayerView)
 [![Platform](https://img.shields.io/cocoapods/p/YoutubePlayerView.svg?style=flat)](https://cocoapods.org/pods/YoutubePlayerView)
