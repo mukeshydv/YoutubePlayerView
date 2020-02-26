@@ -561,9 +561,9 @@ extension YoutubePlayerView {
     /// method corresponds to the JavaScript API defined here:
     ///   `https://developers.google.com/youtube/iframe_api_reference#getCurrentTime`
     ///
-    public func fetchCurrentTime(_ completionHandler: @escaping (Float?) -> ()) {
+    public func fetchCurrentTime(_ completionHandler: @escaping (Double?) -> ()) {
         webView.evaluateJavaScript("player.getCurrentTime();") { (data, _) in
-            completionHandler(data as? Float)
+            completionHandler(data as? Double)
         }
     }
 }
