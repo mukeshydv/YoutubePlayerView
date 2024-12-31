@@ -25,9 +25,9 @@
 
 #if os(iOS)
 import UIKit
-import WebKit
+@preconcurrency import WebKit
 
-public protocol YoutubePlayerViewDelegate: class {
+public protocol YoutubePlayerViewDelegate: AnyObject {
     /// Invoked when the player view is ready to receive API calls.
     ///
     /// - Parameter playerView: The `YoutubePlayerView` instance that has become ready.
@@ -640,6 +640,14 @@ extension YoutubePlayerView {
         webView.evaluateJavaScript("player.getVideoEmbedCode();") { (data, _) in
             completionHandler(data as? String)
         }
+    }
+    
+    /// Sets the volume. Accepts an integer between 0 and 100. This method corresponds to the JavaScript API defined here: `https://developers.google.com/youtube/iframe_api_reference#setVolume`
+    public func setVolume(_ volume: Int) {
+        // volume must be between 0 and 100
+        if volume < 0 || volume > 100 { return }
+        let command = "player.setVolume(\(volume));"
+        webView.evaluateJavaScript(command) { _, _ in }
     }
 }
 
